@@ -7,7 +7,9 @@
 #include "background.h"
 //debug
 #include "racket_ds.h"
+#include "ball_ds.h"
 #include "img_racket.h"
+#include "img_ball.h"
 
 int main()
 {
@@ -26,7 +28,7 @@ int main()
 		0, 0, 256, 192 * 2
 	};
 
-	//debug
+	//debug:racket
 	WallDestroyer::RacketDS racket;
 	Gfx::BitmapTransparent bmp_racket = {
 		(u16 *)img_racketBitmap,
@@ -35,12 +37,24 @@ int main()
 	racket.SetImage(&bmp_racket);
 	racket.SetMovableRange(0, 192 * 2 - 30, 256, 192 * 2);
 
+	//debug:ball
+	WallDestroyer::BallDS ball;
+	Gfx::BitmapTransparent bmp_ball = {
+		(u16 *)img_ballBitmap,
+		16, 16, RGB15(0, 0, 0) | BIT(15)
+	};
+	ball.SetImage(&bmp_ball);
+	ball.SetMovableRange(0, 0, 256, 192 * 2 + 30);
+	ball.SetSpeed(1.0);
+	ball.SetAngle((3.1415926535) * 0.25);
+	ball.MoveTo(10, 10);
+
 	for (;;)
 	{
 		swiWaitForVBlank();
 		scanKeys();
 
-		//debug
+		//debug:racket operation
 		if (keysHeld() & KEY_LEFT)
 		{
 			racket.Move(-3, 0);
@@ -83,9 +97,13 @@ int main()
 		//clear screen
 		Gfx::DrawBox(bmp_both, rgn_both, RGB15(0, 0, 0) | BIT(15));
 
-		//debug
+		//debug:update racket
 		racket.Update();
 		racket.Draw();
+
+		//debug:update ball
+		ball.Update();
+		ball.Draw();
 
 		bg.Update();
 	}
