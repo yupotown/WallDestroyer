@@ -48,6 +48,16 @@ const Gfx::Bitmap& BackGround::GetBothBitmap() const
 	return bmp_both;
 }
 
+const Gfx::BoxRegion& BackGround::GetSingleRegion() const
+{
+	return rgn_single;
+}
+
+const Gfx::BoxRegion& BackGround::GetBothRegion() const
+{
+	return rgn_both;
+}
+
 BackGround::BackGround()
 {
 	//backgrundÇÃèâä˙âª
@@ -74,6 +84,16 @@ BackGround::BackGround()
 	bmp_both.ptr = bg_top_buf;
 	bmp_both.width = 256;
 	bmp_both.height = 192 * 2;
+
+	//Regionç\ë¢ëÃÇópà”
+	rgn_single.x = 0;
+	rgn_single.y = 0;
+	rgn_single.width = 256;
+	rgn_single.height = 192;
+	rgn_both.x = 0;
+	rgn_both.y = 0;
+	rgn_both.width = 256;
+	rgn_both.height = 192 * 2;
 }
 
 BackGround::~BackGround()

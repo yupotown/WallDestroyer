@@ -18,6 +18,8 @@ public:
 	const Gfx::Bitmap& GetTopBitmap() const;
 	const Gfx::Bitmap& GetBottomBitmap() const;
 	const Gfx::Bitmap& GetBothBitmap() const;
+	const Gfx::BoxRegion& GetSingleRegion() const;
+	const Gfx::BoxRegion& GetBothRegion() const;
 private:
 	BackGround();
 	~BackGround();
@@ -28,4 +30,5 @@ private:
 	u16 *bg_top_buf, *bg_bottom_buf;
 
 	Gfx::Bitmap bmp_top, bmp_bottom, bmp_both;
+	Gfx::BoxRegion rgn_single, rgn_both;
 };
