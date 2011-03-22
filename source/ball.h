@@ -17,17 +17,20 @@ namespace WallDestroyer
 		void SetMovableRange(int left, int top, int right, int bottom);
 		void SetAngle(double angle);
 		void SetSpeed(double speed);
+		void Bounce(double wall_angle);
 
 		double GetX() const;
 		double GetY() const;
 		double GetAngle() const;
 		double GetSpeed() const;
+		double GetRadius() const;
 		double GetVx() const;	//X•ûŒü‚Ì‘¬“x
 		double GetVy() const;	//Y•ûŒü‚Ì‘¬“x
 
 	protected:
 		void adjustSize();
 		void adjustPosition();
+		void adjustAngle();
 
 		void calcSpeedXY();
 		void calcAngle();

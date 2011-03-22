@@ -5,6 +5,8 @@
 #include "img_ball.h"
 #include "img_blocks.h"
 
+#include "collision_check.h"
+
 namespace WallDestroyer
 {
 	Game::Game()
@@ -73,10 +75,18 @@ namespace WallDestroyer
 						if (temp < 0)
 						{
 							--temp;
+							if (temp < -3)
+							{
+								temp = -3;
+							}
 						}
 						else
 						{
 							++temp;
+							if (temp > 3)
+							{
+								temp = 3;
+							}
 						}
 					}
 					else if (temp > 0)
@@ -89,6 +99,41 @@ namespace WallDestroyer
 					}
 				}
 				racket.Move(temp, 0);
+			}
+
+			//debug:hit check
+			Gfx::BoxRegion rgn1 = {
+				racket.GetX(), racket.GetY(),
+				racket.GetWidth(), racket.GetHeight()
+			};
+			int temp_r = ball.GetRadius() - 2;
+			Gfx::BoxRegion rgn2 = {
+				ball.GetX() - temp_r, ball.GetY() - temp_r,
+				temp_r * 2, temp_r * 2
+			};
+			if (CollisionCheck(rgn1, rgn2))
+			{
+				if (ball.GetX() < racket.GetX())
+				{
+					ball.SetAngle(M_PI * 7 / 6);
+				}
+				else if (ball.GetX() >= racket.GetX() + racket.GetWidth())
+				{
+					ball.SetAngle(0.0 - M_PI / 6);
+				}
+				else
+				{
+					ball.Bounce((ball.GetX() - (racket.GetX() + racket.GetWidth() / 2)) *
+						(M_PI / 24) / (racket.GetWidth() / 2));
+					if (ball.GetAngle() > 0.0 - M_PI / 6 && ball.GetAngle() < M_PI / 2)
+					{
+						ball.SetAngle(0.0 - M_PI / 6);
+					}
+					else if (ball.GetAngle() >= M_PI / 2 && ball.GetAngle() < M_PI * 7 / 6)
+					{
+						ball.SetAngle(M_PI * 7 / 6);
+					}
+				}
 			}
 
 			clearScreen();

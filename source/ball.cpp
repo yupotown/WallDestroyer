@@ -92,11 +92,18 @@ namespace WallDestroyer
 	void Ball::SetAngle(double angle)
 	{
 		this->angle = angle;
+		adjustAngle();
 	}
 
 	void Ball::SetSpeed(double speed)
 	{
 		this->speed = speed;
+	}
+
+	void Ball::Bounce(double wall_angle)
+	{
+		angle = 2 * (M_PI + wall_angle) - angle;
+		adjustAngle();
 	}
 
 	double Ball::GetX() const
@@ -117,6 +124,11 @@ namespace WallDestroyer
 	double Ball::GetSpeed() const
 	{
 		return speed;
+	}
+
+	double Ball::GetRadius() const
+	{
+		return radius;
 	}
 
 	double Ball::GetVx() const
@@ -162,6 +174,18 @@ namespace WallDestroyer
 		}
 	}
 
+	void Ball::adjustAngle()
+	{
+		while (angle >= M_PI)
+		{
+			angle -= M_PI * 2;
+		}
+		while (angle < -M_PI)
+		{
+			angle += M_PI * 2;
+		}
+	}
+
 	void Ball::calcSpeedXY()
 	{
 		vx = speed * std::cos(angle);
@@ -171,6 +195,7 @@ namespace WallDestroyer
 	void Ball::calcAngle()
 	{
 		angle = std::atan2(vy, vx);
+		adjustAngle();
 	}
 
 	void Ball::calcSpeed()
