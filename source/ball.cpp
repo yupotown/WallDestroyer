@@ -6,6 +6,12 @@
 namespace WallDestroyer
 {
 	Ball::Ball()
+		:x(0.0), y(0.0),
+		angle(0.0),
+		speed(0.0),
+		radius(0.0),
+		range_left(0), range_right(0), range_top(0), range_bottom(0),
+		vx(0.0), vy(0.0)
 	{
 	}
 
@@ -16,9 +22,31 @@ namespace WallDestroyer
 	void Ball::Update()
 	{
 		calcSpeedXY();
-		//debug
 		x += vx;
 		y += vy;
+
+		//bounce
+		if (x - radius < range_left)
+		{
+			vx = std::fabs(vx);
+			calcAngle();
+		}
+		else if (x + radius >= range_right)
+		{
+			vx = -std::fabs(vx);
+			calcAngle();
+		}
+		if (y - radius < range_top)
+		{
+			vy = std::fabs(vy);
+			calcAngle();
+		}
+		else if (y + radius >= range_bottom)
+		{
+			vy = -std::fabs(vy);
+			calcAngle();
+		}
+
 		adjustPosition();
 	}
 
@@ -138,5 +166,21 @@ namespace WallDestroyer
 	{
 		vx = speed * std::cos(angle);
 		vy = speed * std::sin(angle);
+	}
+
+	void Ball::calcAngle()
+	{
+		angle = std::atan2(vy, vx);
+	}
+
+	void Ball::calcSpeed()
+	{
+		speed = std::sqrt(vx * vx + vy * vy);
+	}
+
+	void Ball::calcVector()
+	{
+		calcAngle();
+		calcSpeed();
 	}
 }

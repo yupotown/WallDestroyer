@@ -5,11 +5,14 @@
 
 #include <nds.h>
 #include "background.h"
+#include <cmath>
 //debug
 #include "racket_ds.h"
 #include "ball_ds.h"
+#include "block_ds.h"
 #include "img_racket.h"
 #include "img_ball.h"
+#include "img_blocks.h"
 
 int main()
 {
@@ -45,9 +48,18 @@ int main()
 	};
 	ball.SetImage(&bmp_ball);
 	ball.SetMovableRange(0, 0, 256, 192 * 2 + 30);
-	ball.SetSpeed(1.0);
-	ball.SetAngle((3.1415926535) * 0.25);
+	ball.SetSpeed(2.0);
+	ball.SetAngle(M_PI * 0.25);
 	ball.MoveTo(10, 10);
+
+	//debug:block
+	WallDestroyer::BlockDS block;
+	Gfx::BitmapTransparent bmp_block_red = {
+		(u16 *)img_blocksBitmap,
+		40, 12, RGB15(0, 0, 0) | BIT(15)
+	};
+	block.SetImage(&bmp_block_red);
+	block.MoveTo(20, 20);
 
 	for (;;)
 	{
@@ -104,6 +116,10 @@ int main()
 		//debug:update ball
 		ball.Update();
 		ball.Draw();
+
+		//debug:update block
+		block.Update();
+		block.Draw();
 
 		bg.Update();
 	}

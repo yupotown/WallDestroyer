@@ -4,7 +4,8 @@
 namespace WallDestroyer
 {
 	BallDS::BallDS()
-		:bg(BackGround::Instance())
+		:bg(BackGround::Instance()),
+		img(NULL)
 	{
 	}
 

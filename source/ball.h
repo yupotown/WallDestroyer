@@ -30,6 +30,9 @@ namespace WallDestroyer
 		void adjustPosition();
 
 		void calcSpeedXY();
+		void calcAngle();
+		void calcSpeed();
+		void calcVector();
 
 		double x, y;
 		double angle;
@@ -38,10 +41,10 @@ namespace WallDestroyer
 
 		int range_left, range_right, range_top, range_bottom;
 
+		double vx, vy;
+
 	private:
 		Ball(const Ball& rhs);
 		const Ball& operator =(const Ball& rhs);
-
-		double vx, vy;
 	};
 }
