@@ -5,14 +5,14 @@
 #include "background.h"
 #include "graphics.h"
 
-#include <vector>
+#include <list>
 #include <cmath>
 
 #include "racket_ds.h"
 #include "ball_ds.h"
 #include "block_ds.h"
 
-#define N_BLOCKS (4)
+#define N_IMG_BLOCKS (4)
 
 namespace WallDestroyer
 {
@@ -44,8 +44,9 @@ namespace WallDestroyer
 
 		RacketDS racket;
 		BallDS ball;
-		std::vector< BlockDS > blocks;
-		Gfx::BitmapTransparent bmp_racket, bmp_ball, bmp_blocks[N_BLOCKS];
+		std::list< BlockDS * > blocks;
+		Gfx::BitmapTransparent bmp_racket, bmp_ball;
+		Gfx::Bitmap bmp_blocks[N_IMG_BLOCKS];
 
 		void initVram();
 		void clearScreen();

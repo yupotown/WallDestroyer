@@ -49,6 +49,26 @@ namespace WallDestroyer
 		adjustSize();
 	}
 
+	int Block::GetX() const
+	{
+		return x;
+	}
+
+	int Block::GetY() const
+	{
+		return y;
+	}
+
+	int Block::GetWidth() const
+	{
+		return width;
+	}
+
+	int Block::GetHeight() const
+	{
+		return height;
+	}
+
 	void Block::adjustSize()
 	{
 		if (width < 0)

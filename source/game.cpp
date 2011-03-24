@@ -1,6 +1,8 @@
 
 #include "game.h"
 
+#include <cstdlib>
+
 #include "img_racket.h"
 #include "img_ball.h"
 #include "img_blocks.h"
@@ -33,12 +35,12 @@ namespace WallDestroyer
 		ball.SetSpeed(2.0);
 		ball.SetAngle(M_PI * 0.25);
 
-		for (int i = 0; i < N_BLOCKS; ++i)
+		for (int i = 0; i < N_IMG_BLOCKS; ++i)
 		{
 			bmp_blocks[i].ptr = (u16 *)img_blocksBitmap + (40 * 12 * i);
 			bmp_blocks[i].width = 40;
 			bmp_blocks[i].height = 12;
-			bmp_blocks[i].tr_col = RGB15(0, 0, 0) | BIT(15);
+			//bmp_blocks[i].tr_col = RGB15(0, 0, 0) | BIT(15);
 		}
 	}
 
@@ -101,7 +103,7 @@ namespace WallDestroyer
 				racket.Move(temp, 0);
 			}
 
-			//debug:hit check
+			//debug:collision check
 			Gfx::BoxRegion rgn1 = {
 				racket.GetX(), racket.GetY(),
 				racket.GetWidth(), racket.GetHeight()
@@ -111,6 +113,15 @@ namespace WallDestroyer
 				ball.GetX() - temp_r, ball.GetY() - temp_r,
 				temp_r * 2, temp_r * 2
 			};
+			static int c = 0;
+			if (++c == 30)
+			{
+				c = 0;
+				BlockDS *temp = new BlockDS();
+				temp->SetImage(&bmp_blocks[std::rand() % N_IMG_BLOCKS]);
+				temp->MoveTo(std::rand() % (256 - 40), std::rand() % (192 - 12));
+				blocks.push_back(temp);
+			}
 			if (CollisionCheck(rgn1, rgn2))
 			{
 				if (ball.GetX() < racket.GetX())
@@ -144,10 +155,12 @@ namespace WallDestroyer
 			ball.Update();
 			ball.Draw();
 
-			for (std::vector< BlockDS >::iterator it = blocks.begin(); it != blocks.end(); ++it)
 			{
-				(*it).Update();
-				(*it).Draw();
+				for (std::list< BlockDS * >::iterator it = blocks.begin(); it != blocks.end(); ++it)
+				{
+					(*it)->Update();
+					(*it)->Draw();
+				}
 			}
 
 			bg.Update();

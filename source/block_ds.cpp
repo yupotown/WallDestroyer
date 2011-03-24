@@ -23,7 +23,15 @@ namespace WallDestroyer
 		}
 	}
 
-	void BlockDS::SetImage(Gfx::BitmapTransparent *img)
+	//void BlockDS::SetImage(Gfx::BitmapTransparent *img)
+	//{
+	//	this->img = img;
+	//	width = img->width;
+	//	height = img->height;
+	//	adjustSize();
+	//}
+
+	void BlockDS::SetImage(Gfx::Bitmap *img)
 	{
 		this->img = img;
 		width = img->width;

@@ -22,6 +22,11 @@ namespace WallDestroyer
 		void Move(int x, int y);	//‘Š‘ÎˆÊ’u
 		void SetSize(int width, int height);
 
+		int GetX() const;
+		int GetY() const;
+		int GetWidth() const;
+		int GetHeight() const;
+
 	protected:
 		void adjustSize();
 		void adjustPosition();

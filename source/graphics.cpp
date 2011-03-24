@@ -43,7 +43,7 @@ namespace Gfx
 		}
 
 		//---•`‰æ---//
-		u16 *pdest = bmp.ptr + (y * (bmp.width + 7) / 8 * 8 + x);
+		u16 *pdest = (bmp.ptr + (y * (bmp.width + 7) / 8 * 8 + x));
 		for(std::size_t i = 0; i < h; ++i)
 		{
 			for(std::size_t j = 0; j < w; ++j)

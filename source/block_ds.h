@@ -15,7 +15,8 @@ namespace WallDestroyer
 
 		virtual void Draw();
 
-		void SetImage(Gfx::BitmapTransparent *img);
+		//void SetImage(Gfx::BitmapTransparent *img);
+		void SetImage(Gfx::Bitmap *img);
 
 	private:
 		BlockDS(const BlockDS& rhs);
@@ -23,7 +24,8 @@ namespace WallDestroyer
 
 		BackGround& bg;
 
-		Gfx::BitmapTransparent *img;
+		//Gfx::BitmapTransparent *img;
+		Gfx::Bitmap *img;
 		Gfx::Position draw_pos;
 	};
 }
