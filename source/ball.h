@@ -12,12 +12,13 @@ namespace WallDestroyer
 		virtual void Update();
 		virtual void Draw() = 0;
 
+		void Bounce(double wall_angle);
+
 		void MoveTo(double x, double y);	//â‘ÎˆÊ’u
 		void Move(double x, double y);		//‘Š‘ÎˆÊ’u
 		void SetMovableRange(int left, int top, int right, int bottom);
 		void SetAngle(double angle);
 		void SetSpeed(double speed);
-		void Bounce(double wall_angle);
 
 		double GetX() const;
 		double GetY() const;

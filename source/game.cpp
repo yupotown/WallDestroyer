@@ -2,12 +2,13 @@
 #include "game.h"
 
 #include <cstdlib>
+#include <ctime>
 
 #include "img_racket.h"
 #include "img_ball.h"
 #include "img_blocks.h"
 
-#include "collision_check.h"
+#include "collision_check.hpp"
 
 namespace WallDestroyer
 {
@@ -18,6 +19,8 @@ namespace WallDestroyer
 		rgn_both(bg.GetBothRegion())
 	{
 		initVram();
+
+		std::srand(std::time(NULL));
 
 		bmp_racket.ptr = (u16 *)img_racketBitmap;
 		bmp_racket.width = 60;
@@ -41,6 +44,15 @@ namespace WallDestroyer
 			bmp_blocks[i].width = 40;
 			bmp_blocks[i].height = 12;
 			//bmp_blocks[i].tr_col = RGB15(0, 0, 0) | BIT(15);
+		}
+
+		//debug:set blocks
+		for (int i = 0; i < 50; ++i)
+		{
+			BlockDS *temp = new BlockDS();
+			temp->SetImage(&bmp_blocks[std::rand() % N_IMG_BLOCKS]);
+			temp->MoveTo(std::rand() % (256 - 40), std::rand() % (192 - 12));
+			blocks.push_back(temp);
 		}
 	}
 
@@ -104,25 +116,15 @@ namespace WallDestroyer
 			}
 
 			//debug:collision check
-			Gfx::BoxRegion rgn1 = {
+			Collision::Rectangle c_block = {
 				racket.GetX(), racket.GetY(),
 				racket.GetWidth(), racket.GetHeight()
 			};
-			int temp_r = ball.GetRadius() - 2;
-			Gfx::BoxRegion rgn2 = {
-				ball.GetX() - temp_r, ball.GetY() - temp_r,
-				temp_r * 2, temp_r * 2
+			Collision::Circle c_ball = {
+				ball.GetX(), ball.GetY(),
+				ball.GetRadius()
 			};
-			static int c = 0;
-			if (++c == 30)
-			{
-				c = 0;
-				BlockDS *temp = new BlockDS();
-				temp->SetImage(&bmp_blocks[std::rand() % N_IMG_BLOCKS]);
-				temp->MoveTo(std::rand() % (256 - 40), std::rand() % (192 - 12));
-				blocks.push_back(temp);
-			}
-			if (CollisionCheck(rgn1, rgn2))
+			if (Collision::Check(c_block, c_ball))
 			{
 				if (ball.GetX() < racket.GetX())
 				{
@@ -146,6 +148,99 @@ namespace WallDestroyer
 					}
 				}
 			}
+			bool temp_bounce_flag = false;
+			double temp_angle = 0.0;
+			for (
+				std::list< BlockDS * >::iterator it = blocks.begin();
+				it != blocks.end();
+				++it
+				)
+			{
+				c_block.x = (*it)->GetX();
+				c_block.y = (*it)->GetY();
+				c_block.width = (*it)->GetWidth();
+				c_block.height = (*it)->GetHeight();
+				if (Check(c_block, c_ball))
+				{
+					int ball_x = ball.GetX();
+					int ball_y = ball.GetY();
+					int ball_radius = ball.GetRadius();
+					int ball_speed = ball.GetSpeed();
+					double s = std::sin(ball.GetAngle()),
+						c = std::cos(ball.GetAngle());
+					Collision::Circle temp_ball;
+					temp_ball.radius = ball_radius;
+					for (int i = 0; i < ball_speed; ++i)
+					{
+						temp_ball.x = ball_x + c * i;
+						temp_ball.y = ball_y + s * i;
+						if (Collision::Check(temp_ball, c_block))
+						{
+							break;
+						}
+					}
+					temp_bounce_flag = true;
+					if (temp_ball.x < c_block.x)
+					{
+						if (temp_ball.y < c_block.y)
+						{
+							//¶ã
+							temp_angle = std::atan2(
+								c_block.y - temp_ball.y,
+								c_block.x - temp_ball.x
+								) + M_PI / 2;
+						}
+						else if (temp_ball.y >= c_block.y + static_cast<int>(c_block.height))
+						{
+							//¶‰º
+							temp_angle = std::atan2(
+								c_block.y - temp_ball.y,
+								c_block.x - temp_ball.x
+								) + M_PI / 2;
+						}
+						else
+						{
+							//¶
+							temp_angle = M_PI / 2;
+						}
+					}
+					else if (temp_ball.x >= c_block.x + static_cast<int>(c_block.width))
+					{
+						if (temp_ball.y < c_block.y)
+						{
+							//‰Eã
+							temp_angle = std::atan2(
+								c_block.y - temp_ball.y,
+								c_block.x - temp_ball.x
+								) + M_PI / 2;
+						}
+						else if (temp_ball.y >= c_block.y + static_cast<int>(c_block.height))
+						{
+							//‰E‰º
+							temp_angle = std::atan2(
+								c_block.y - temp_ball.y,
+								c_block.x - temp_ball.x
+								) + M_PI / 2;
+						}
+						else
+						{
+							//‰E
+							temp_angle = M_PI / 2;
+						}
+					}
+					else
+					{
+						//ã‰º or ’†‚É‚¢‚½
+						temp_angle = 0.0;
+					}
+					(*it)->OnBallHit(ball);
+					//ball.SetSpeed(ball.GetSpeed() + 0.1);
+				}
+			}
+			if (temp_bounce_flag)
+			{
+				ball.Bounce(temp_angle);
+			}
 
 			clearScreen();
 
@@ -156,10 +251,20 @@ namespace WallDestroyer
 			ball.Draw();
 
 			{
-				for (std::list< BlockDS * >::iterator it = blocks.begin(); it != blocks.end(); ++it)
+				for (
+					std::list< BlockDS * >::iterator it = blocks.begin();
+					it != blocks.end();
+					)
 				{
 					(*it)->Update();
+					if ((*it)->WasDestroyed())
+					{
+						delete (*it);
+						it = blocks.erase(it);
+						continue;
+					}
 					(*it)->Draw();
+					++it;
 				}
 			}
 
