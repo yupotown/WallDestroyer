@@ -48,6 +48,12 @@ namespace WallDestroyer
 		Gfx::BitmapTransparent bmp_racket, bmp_ball;
 		Gfx::Bitmap bmp_blocks[N_IMG_BLOCKS];
 
+		bool is_started, is_cleared;
+
+		void operate();
+		void update();
+		void draw();
+
 		void initVram();
 		void clearScreen();
 	};

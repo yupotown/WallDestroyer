@@ -12,21 +12,22 @@ namespace WallDestroyer
 		virtual void Update();
 		virtual void Draw() = 0;
 
-		void Bounce(double wall_angle);
+		void Bounce(float wall_angle);
 
-		void MoveTo(double x, double y);	//絶対位置
-		void Move(double x, double y);		//相対位置
+		void MoveTo(int x, int y);	//絶対位置
+		void Move(int x, int y);		//相対位置
 		void SetMovableRange(int left, int top, int right, int bottom);
-		void SetAngle(double angle);
-		void SetSpeed(double speed);
+		void SetAngle(float angle);
+		void SetRadius(int radius);
+		void SetSpeed(float speed);
 
-		double GetX() const;
-		double GetY() const;
-		double GetAngle() const;
-		double GetSpeed() const;
-		double GetRadius() const;
-		double GetVx() const;	//X方向の速度
-		double GetVy() const;	//Y方向の速度
+		int GetX() const;
+		int GetY() const;
+		float GetAngle() const;	//-π～π
+		float GetSpeed() const;
+		int GetRadius() const;
+		int GetVx() const;	//X方向の速度
+		int GetVy() const;	//Y方向の速度
 
 	protected:
 		void adjustSize();
@@ -38,16 +39,18 @@ namespace WallDestroyer
 		void calcSpeed();
 		void calcVector();
 
-		double x, y;
-		double angle;
-		double speed;
-		double radius;
+	private:
+		const int unit;
+
+		int x, y;
+		float angle;
+		int speed;
+		int radius;
 
 		int range_left, range_right, range_top, range_bottom;
 
-		double vx, vy;
+		int vx, vy;
 
-	private:
 		Ball(const Ball& rhs);
 		const Ball& operator =(const Ball& rhs);
 	};

@@ -21,7 +21,7 @@ include $(DEVKITARM)/ds_rules
 
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCES		:=	source
+SOURCES		:=	source source/shape
 DATA		:=  date
 INCLUDES	:=	include
 GRAPHICS	:=	data
@@ -98,7 +98,7 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 					-I$(CURDIR)/$(BUILD) \
-					-I"C:/boost_1_46_0"
+					#-I"C:/boost_1_46_0"
  
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
  

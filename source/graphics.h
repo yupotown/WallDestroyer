@@ -10,6 +10,7 @@ namespace Gfx
 	{
 		int x, y;
 	};
+	typedef Position Point;
 
 	struct Bitmap
 	{
@@ -71,6 +72,10 @@ namespace Gfx
 	//	bool tr_flag;
 	//};
 
+	void DrawPixel(const Bitmap& bmp, const Point& p, u16 col);
+	void DrawPixel(const Bitmap& bmp, int x, int y, u16 col);
+	void DrawLine(const Bitmap& bmp, const Point& start, const Point& end, u16 col);
+	void DrawLinel(const Bitmap& bmp, int start_x, int start_y, int end_x, int end_y, u16 col);
 	void DrawBox(const Bitmap& bmp, const BoxRegion& rgn, u16 col);
 
 	void CopyBox(

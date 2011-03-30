@@ -17,8 +17,8 @@ namespace WallDestroyer
 	{
 		if (img != NULL)
 		{
-			draw_pos.x = static_cast<int>(x - radius);
-			draw_pos.y = static_cast<int>(y - radius);
+			draw_pos.x = static_cast<int>(this->GetX() - this->GetRadius());
+			draw_pos.y = static_cast<int>(this->GetY() - this->GetRadius());
 			Gfx::CopyBox(bg.GetBothBitmap(), draw_pos, *img);
 		}
 	}
@@ -34,7 +34,7 @@ namespace WallDestroyer
 		if (img->width == img->height)
 		{
 			this->img = img;
-			radius = img->width / 2;
+			this->SetRadius(img->width / 2);
 		}
 	}
 }

@@ -6,7 +6,8 @@
 namespace WallDestroyer
 {
 	Ball::Ball()
-		:x(0.0), y(0.0),
+		:unit(100),
+		x(0.0), y(0.0),
 		angle(0.0),
 		speed(0.0),
 		radius(0.0),
@@ -28,39 +29,39 @@ namespace WallDestroyer
 		//bounce
 		if (x - radius < range_left)
 		{
-			vx = std::fabs(vx);
+			vx = std::abs(vx);
 			calcAngle();
 		}
 		else if (x + radius >= range_right)
 		{
-			vx = -std::fabs(vx);
+			vx = -std::abs(vx);
 			calcAngle();
 		}
 		if (y - radius < range_top)
 		{
-			vy = std::fabs(vy);
+			vy = std::abs(vy);
 			calcAngle();
 		}
 		else if (y + radius >= range_bottom)
 		{
-			vy = -std::fabs(vy);
+			vy = -std::abs(vy);
 			calcAngle();
 		}
 
 		adjustPosition();
 	}
 
-	void Ball::MoveTo(double x, double y)
+	void Ball::MoveTo(int x, int y)
 	{
-		this->x = x;
-		this->y = y;
+		this->x = x * unit;
+		this->y = y * unit;
 		adjustPosition();
 	}
 
-	void Ball::Move(double x, double y)
+	void Ball::Move(int x, int y)
 	{
-		this->x += x;
-		this->y += y;
+		this->x += x * unit;
+		this->y += y * unit;
 		adjustPosition();
 	}
 
@@ -68,77 +69,82 @@ namespace WallDestroyer
 	{
 		if (left > right)
 		{
-			range_left = right;
-			range_right = left;
+			range_left = right * unit;
+			range_right = left * unit;
 		}
 		else
 		{
-			range_left = left;
-			range_right = right;
+			range_left = left * unit;
+			range_right = right * unit;
 		}
 		if (top > bottom)
 		{
-			range_top = bottom;
-			range_bottom = top;
+			range_top = bottom * unit;
+			range_bottom = top * unit;
 		}
 		else
 		{
-			range_top = top;
-			range_bottom = bottom;
+			range_top = top * unit;
+			range_bottom = bottom * unit;
 		}
 		adjustPosition();
 	}
 
-	void Ball::SetAngle(double angle)
+	void Ball::SetAngle(float angle)
 	{
 		this->angle = angle;
 		adjustAngle();
 	}
 
-	void Ball::SetSpeed(double speed)
+	void Ball::SetSpeed(float speed)
 	{
-		this->speed = speed;
+		this->speed = static_cast<int>(speed * unit);
 	}
 
-	void Ball::Bounce(double wall_angle)
+	void Ball::SetRadius(int radius)
+	{
+		this->radius = radius * unit;
+	}
+
+	void Ball::Bounce(float wall_angle)
 	{
 		angle = 2 * (M_PI + wall_angle) - angle;
 		adjustAngle();
 	}
 
-	double Ball::GetX() const
+	int Ball::GetX() const
 	{
-		return x;
+		return x / unit;
 	}
 
-	double Ball::GetY() const
+	int Ball::GetY() const
 	{
-		return y;
+		return y / unit;
 	}
 
-	double Ball::GetAngle() const
+	float Ball::GetAngle() const
 	{
 		return angle;
 	}
 
-	double Ball::GetSpeed() const
+	float Ball::GetSpeed() const
 	{
-		return speed;
+		return static_cast<float>(speed) / unit;
 	}
 
-	double Ball::GetRadius() const
+	int Ball::GetRadius() const
 	{
-		return radius;
+		return radius / unit;
 	}
 
-	double Ball::GetVx() const
+	int Ball::GetVx() const
 	{
-		return std::cos(angle) * speed;
+		return std::cos(angle) * (speed / unit);
 	}
 
-	double Ball::GetVy() const
+	int Ball::GetVy() const
 	{
-		return std::sin(angle) * speed;
+		return std::sin(angle) * (speed / unit);
 	}
 
 	void Ball::adjustSize()

@@ -1,9 +1,84 @@
 
-#include "graphics.h"
 //http://bit.ly/hJH5qS PDF NDSソフトウェアの開発環境と Mac OS X
+
+#include "graphics.h"
+#include <cmath>
 
 namespace Gfx
 {
+	void DrawPixel(const Bitmap& bmp, const Point& p, u16 col)
+	{
+		if (
+			p.x >= 0 && p.y >= 0 &&
+			p.x < static_cast<int>(bmp.width) && p.y < static_cast<int>(bmp.height)
+			)
+		{
+			*(bmp.ptr + p.y * bmp.width + p.x) = col;
+		}
+	}
+	void DrawPixel(const Bitmap& bmp, int x, int y, u16 col)
+	{
+		const Point temp = {x, y};
+		DrawPixel(bmp, temp, col);
+	}
+
+	void DrawLine(const Bitmap& bmp, const Point& start, const Point& end, u16 col)
+	{
+		const Point *s, *e;
+
+		if (std::abs(end.x - start.x) > std::abs(end.y - start.y))
+		{
+			//横長
+			if (end.x > start.x)
+			{
+				s = &start;
+				e = &end;
+			}
+			else
+			{
+				s = &end;
+				e = &start;
+			}
+			int temp_x = e->x - s->x;
+			int temp_y = e->y - s->y;
+			Point temp_p;
+			for (int i = s->x, j = 0; i <= e->x; ++i, ++j)
+			{
+				temp_p.x = i;
+				temp_p.y = j * temp_y / temp_x + s->y;
+				DrawPixel(bmp, temp_p, col);
+			}
+		}
+		else
+		{
+			//縦長
+			if (end.y > start.y)
+			{
+				s = &start;
+				e = &end;
+			}
+			else
+			{
+				s = &end;
+				e = &start;
+			}
+			int temp_x = e->x - s->x;
+			int temp_y = e->y - s->y;
+			Point temp_p;
+			for (int i = s->y, j = 0; i <= e->y; ++i, ++j)
+			{
+				temp_p.x = j * temp_x / temp_y + s->x;
+				temp_p.y = i;
+				DrawPixel(bmp, temp_p, col);
+			}
+		}
+	}
+	void DrawLine(const Bitmap& bmp, int start_x, int start_y, int end_x, int end_y, u16 col)
+	{
+		const Point temp1 = {start_x, start_y}, temp2 = {end_x, end_y};
+		DrawLine(bmp, temp1, temp2, col);
+	}
+
 	//これ進研ゼミでやったところだ！
 	void DrawBox(const Bitmap& bmp, const BoxRegion& rgn, u16 col)
 	{
